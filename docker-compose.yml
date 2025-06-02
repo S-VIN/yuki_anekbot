@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  bot:
+    image: vinstp/yuki_anekbot:latest
+
+    restart: always
+
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.hostname == server-home
+
+    environment:
+      TG_API_ID: 'xxx'
+      TG_API_HASH: 'xxx'
+      TG_BOT_TOKEN: 'xxx'
+
+
+  db:
+    image: vinstp/yuki_anekbot_database:latest
+
+    restart: always
+
+    ports:
+      - "5401:5432"
+
+    volumes:
+      - /home/stepan-vinokurov/Data/yuki_anekbot_init_db:/docker-entrypoint-initdb.d
+      - /home/stepan-vinokurov/Data/yuki_anekbot_postgres:/var/lib/postgresql/data
+
+    build:
+      context: postgres/
+      dockerfile: Dockerfile
