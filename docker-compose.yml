@@ -2,21 +2,13 @@ version: "3.8"
 
 services:
   bot:
-    image: vinstp/yuki_anekbot:latest
+    image: vinstp/yuki-anekbot:latest
 
     restart: always
 
     build:
       context: ./bot
       dockerfile: Dockerfile
-
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - node.hostname == server-home
 
     environment:
       TG_API_ID: 'xxx'
@@ -25,7 +17,7 @@ services:
 
 
   db:
-    image: vinstp/yuki_anekbot_database:latest
+    image: vinstp/yuki-anekbot-database:latest
 
     restart: always
 

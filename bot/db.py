@@ -1,7 +1,8 @@
 import psycopg2
 import psycopg2.extras
 
-POSTGRES_DSN = 'dbname=yuki_anekbot user=stepan-vinokurov password=stepan-vinokurov host=db port=5432'
+# POSTGRES_DSN = 'dbname=yuki_anekbot user=stepan-vinokurov password=stepan-vinokurov host=db port=5432'
+POSTGRES_DSN = 'dbname=yuki_anekbot user=stepan-vinokurov password=stepan-vinokurov host=192.168.2.102 port=5401'
 
 
 class Database:
@@ -19,6 +20,12 @@ class Database:
     def get_random_anek_sync(self):
         with self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
             cur.execute('SELECT id, anek FROM aneks ORDER BY RANDOM() LIMIT 1')
+            row = cur.fetchone()
+            return dict(row) if row else None
+
+    def get_anek_by_id(self, id):
+        with self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
+            cur.execute('SELECT id, anek FROM aneks WHERE id = %s', (id,))
             row = cur.fetchone()
             return dict(row) if row else None
 
